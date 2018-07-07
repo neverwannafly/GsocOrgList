@@ -1,4 +1,7 @@
+import sys
+
 from .scrapper import scrapper
+from operator import itemgetter
 
 class Lister:
 
@@ -23,20 +26,32 @@ class Lister:
                 if start_year==2009:
                     organisations = soup_object.find_all('a')
                     for index in range(19, len(organisations)-4):
-                        if self.ORGANISATIONS.get(organisations[index].get_text(), None):
-                            self.ORGANISATIONS[organisations[index].get_text()] += 1
+                        if self.ORGANISATIONS.get(organisations[index].get_text().lower(), None):
+                            self.ORGANISATIONS[organisations[index].get_text().lower()] += 1
                         else:
-                            self.ORGANISATIONS[organisations[index].get_text()] = 1
+                            self.ORGANISATIONS[organisations[index].get_text().lower()] = 1
                 elif start_year==2016:
                     organisations = soup_object.find_all('h4', class_="organization-card__name")
                     for index in range(0, len(organisations)-1):
-                        if self.ORGANISATIONS.get(organisations[index].get_text(), None):
-                            self.ORGANISATIONS[organisations[index].get_text()] += 1
+                        if self.ORGANISATIONS.get(organisations[index].get_text().lower(), None):
+                            self.ORGANISATIONS[organisations[index].get_text().lower()] += 1
                         else:
-                            self.ORGANISATIONS[organisations[index].get_text()] = 1
+                            self.ORGANISATIONS[organisations[index].get_text().lower()] = 1
+
+    def _print_headers(self):
+        print("|------------------------------------------------------------------------------------------------------------------|")
+        print("|                Organisations                                                                         | Frequency |")
+        print("|__________________________________________________________________________________________________________________|")
+
+    def _print_footers(self):
+        print("|------------------------------------------------------------------------------------------------------------------|")
 
     def _parse_dictionary(self):
-        pass
+        self.ORGANISATIONS = sorted(self.ORGANISATIONS.items(), key=itemgetter(1), reverse=True)
+        self._print_headers()
+        for organisation in self.ORGANISATIONS:
+            print("| {0: >2}{1: <99}".format("", organisation[0])+ "|" + "{0: >5}{1: <6}".format("",organisation[1]) + "|")
+        self._print_footers()
 
     def get_organisations(self):
-        print(self.ORGANISATIONS)
+        self._parse_dictionary()
