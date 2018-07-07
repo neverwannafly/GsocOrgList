@@ -1,5 +1,3 @@
-import sys
-
 from .scrapper import scrapper
 from operator import itemgetter
 
