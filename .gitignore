@@ -1,0 +1,6 @@
+# Virtual Environments
+virtualenv/
+
+# Files made cause of imports
+__pycache__/
+*/__pycache__/
